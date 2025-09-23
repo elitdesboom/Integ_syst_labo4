@@ -1,0 +1,17 @@
+{
+  "name": "integ_syst_lab4-java_eliodb_a25",
+  "version": "1.0.0",
+  "description": "Laboratoire 4 pour faire une pizzeria",
+  "keywords": [
+    "A25",
+    "Labo",
+    "4"
+  ],
+  "license": "ISC",
+  "author": "Éliott DBoom",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
