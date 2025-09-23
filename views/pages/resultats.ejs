@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h1 class="mb-4">Résumé de votre commande</h1>
+    
+    <div class="card mb-4">
+        <div class="card-header">Détails de la commande</div>
+        <div class="card-body">
+            <table class="table">
+                <tr><td>Pizza :</td><td><%= commande.pizzaType %></td></tr>
+                <tr><td>Quantité :</td><td><%= commande.quantity %></td></tr>
+                <tr><td>Taille :</td><td><%= commande.size %></td></tr>
+                <tr><td>Ingrédients extras :</td><td><%= commande.extras.join(', ') || 'Aucun' %></td></tr>
+                <tr><td>Adresse :</td><td><%= commande.address %></td></tr>
+                <tr><td>Code postal :</td><td><%= commande.postalCode %></td></tr>
+                <tr><td>Nom complet :</td><td><%= commande.nom %></td></tr>
+                <tr><td>Téléphone :</td><td><%= commande.phone %></td></tr>
+                <tr><td>Courriel :</td><td><%= commande.email %></td></tr>
+                <tr><td>Paiement :</td><td><%= commande.payment %></td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Calcul du prix (TPS + TVQ : <%= taxesRate %>%)</div>
+        <div class="card-body">
+            <p>Prix avant taxes : <strong>$<%= prixAvantTaxes %></strong></p>
+            <p>Prix après taxes : <strong>$<%= prixApresTaxes %></strong></p>
+        </div>
+    </div>
+
+    <a href="/cmd" class="btn btn-secondary mt-3">Nouvelle commande</a>
+</body>
+</html>
