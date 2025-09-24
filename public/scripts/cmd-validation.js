@@ -7,7 +7,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
-  // quantité : bloquer lettres / coller non numériques / roulette
+  //Quantité : bloquer lettres, copier coller non numériques et roulette souris
   const qty = document.getElementById('quantity');
   if (qty)
   {
