@@ -4,8 +4,8 @@
   * @file     accueil.ejs
   * @author   Éliott Desbordes-Boom (202257861@edu.clg.qc.ca)
   * @version  1
-  * @date     12/09/2025
-  * @brief    Laboratoire 3 - Intégration de systèmes - Page accueil en JS Express  
+  * @date     23/09/2025
+  * @brief    Laboratoire 4 - Page d'accueil de la pizzeria
   */
 -->
 
@@ -15,17 +15,18 @@
   </head>
 
   <body>
-    <header >
-      <%- include ('../partials/header') %>
+    <header>
+      <%- include('../partials/header') %>
     </header>
 
-    <main class="jumbotron text-align-left">
-        <h1>Bienvenue sur la page d'accueil</h1>
-        <%- include ('../partials/index') %>
+    <main class="jumbotron py-4">
+      <h1 style="text-decoration: underline; color: rgb(0, 153, 255);">La Pizzeria du Labo</h1>
+      <br>
+      <%- include('../partials/menu') %>
     </main>
 
     <footer>
-      <% include ('../partials/footer') %>
+      <%- include('../partials/footer') %>
     </footer>
   </body>
 </html>

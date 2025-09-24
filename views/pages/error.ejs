@@ -4,22 +4,20 @@
   * @file     error.ejs
   * @author   Éliott Desbordes-Boom (202257861@edu.clg.qc.ca)
   * @version  1
-  * @date     12/09/2025
+  * @date     23/09/2025
   * @brief    Laboratoire 4 - Gestion des erreurs
   * @details  Page d'erreur affichant le message, le statut et la pile
   */
 -->
 
-
-<!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Erreur</title>
-</head>
-<body>
-    <h1><%= message %></h1>
-    <h2><%= error.status %></h2>
-    <pre><%= error.stack %></pre>
-</body>
+  <head>
+      <meta charset="UTF-8">
+      <title>Erreur</title>
+  </head>
+  <body>
+      <h1><%= message %></h1>
+      <h2><%= error.status %></h2>
+      <pre><%= error.stack %></pre>
+  </body>
 </html>

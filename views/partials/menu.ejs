@@ -1,0 +1,65 @@
+<!--views/partial/menu.ejs-->
+<!--
+/**
+  * @file     menu.ejs
+  * @author   Éliott Desbordes-Boom (202257861@edu.clg.qc.ca)
+  * @version  1
+  * @date     23/09/2025
+  * @brief    Laboratoire 4 - Intégration de systèmes - Menu en partial de la pizzeria
+  */
+-->
+
+
+<section class="container my-4">
+  <aside class="text-center mb-3">
+    <h2>Menu de la Pizzeria</h2>
+    <p class="lead">Choisis ta pizza préférée et passe ta commande rapidement.</p>
+  </aside>
+
+  <aside class="row">
+    <!-- Hawaienne -->
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm d-flex flex-column">
+        <img src="./image/img_hawaienne.png" alt="Hawaïenne">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title"><strong>Hawaïenne</strong></h5>
+          <p class="card-text">Tomate, fromage, jambon et morceaux d'ananas — un classique.</p>
+        </div>
+        <div class="card-footer d-flex align-items-center">
+          <span class="mr-3"><strong>$7.00</strong></span>
+          <a href="/cmd?pizza=Hawaïenne" class="btn btn-primary">Commander</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- All-dressed -->
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm d-flex flex-column">
+        <img src="./image/img_all-dressed.png" alt="All-dressed">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title"><strong>All-dressed</strong></h5>
+          <p class="card-text">Fromage, pepperoni, légumes et plus.</p>
+        </div>
+        <div class="card-footer d-flex align-items-center">
+          <span class="mr-3"><strong>$8.10</strong></span>
+          <a href="/cmd?pizza=All-dressed" class="btn btn-primary">Commander</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sicilienne -->
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm d-flex flex-column">
+        <img src="./image/Img_sicilienne.png" alt="Sicilienne">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title"><strong>Sicilienne</strong></h5>
+          <p class="card-text">Pâte épaisse, sauce riche, garniture généreuse.</p>
+        </div>
+        <div class="card-footer d-flex align-items-center">
+            <span class="mr-3"><strong>$6.30</strong></span>
+            <a href="/cmd?pizza=Sicilienne" class="btn btn-primary">Commander</a>
+        </div>
+      </div>
+    </div>
+  </aside>
+</section>

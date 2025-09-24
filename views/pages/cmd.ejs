@@ -1,131 +1,151 @@
 <!DOCTYPE html>
+<!--
+/**
+  * @file     cmd.ejs
+  * @author   Éliott Desbordes-Boom (202257861@edu.clg.qc.ca)
+  * @version  1
+  * @date     23/09/2025
+  * @brief    Laboratoire 4 - Intégration de systèmes - page de commande d'une pizza
+  */
+-->
+
+
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title><%= title %></title>
-    <!-- Bootstrap CDN pour un design élégant (comme dans Partie 4) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="container mt-5">
-    <h1 class="mb-4">Formulaire de Commande de Pizza</h1>
-    <form action="/submit-order" method="POST" class="needs-validation" novalidate>
-        <div class="mb-3">
-            <label class="form-label">Sorte de Pizza commandée :</label><br>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="pizzaType" value="Hawaïenne" required>
-                <label class="form-check-label">Hawaïenne</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="pizzaType" value="All-dressed" required>
-                <label class="form-check-label">All-dressed</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="pizzaType" value="Sicilienne" required>
-                <label class="form-check-label">Sicilienne</label>
-            </div>
-            <div class="invalid-feedback">Veuillez choisir une sorte de pizza.</div>
-        </div>
+    <head>
+        <%- include('../partials/head') %>
 
-        <div class="mb-3">
-            <label for="quantity" class="form-label">Quantité (entier entre 1 et 99) :</label>
-            <input type="number" class="form-control" id="quantity" name="quantity" min="1" max="99" required>
-            <div class="invalid-feedback">La quantité doit être un entier entre 1 et 99.</div>
-        </div>
+    </head>
 
-        <div class="mb-3">
-            <label for="size" class="form-label">Taille :</label>
-            <select class="form-select" id="size" name="size" required>
-                <option value="">Choisir...</option>
-                <option value="Small">Small</option>
-                <option value="Medium">Medium</option>
-                <option value="Large">Large</option>
-            </select>
-            <div class="invalid-feedback">Veuillez choisir une taille.</div>
-        </div>
+    <body>
+        <header><%- include('../partials/header') %></header>
 
-        <div class="mb-3">
-            <label class="form-label">Ingrédients supplémentaires :</label><br>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="extras[]" value="Fromage extra">
-                <label class="form-check-label">Fromage extra</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="extras[]" value="Pepperoni">
-                <label class="form-check-label">Pepperoni</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="extras[]" value="Champignons">
-                <label class="form-check-label">Champignons</label>
-            </div>
-        </div>
+        <main>
+            <section class="container">
+                <aside class="form-wrapper" style="max-width: 900px; margin: 2.5rem auto; background: #b3d4e4; ;padding: 1.5rem;">
+                    <h1 class="mb-3"><%= title || 'Formulaire de Commande' %></h1>
 
-        <div class="mb-3">
-            <label for="address" class="form-label">Adresse :</label>
-            <textarea class="form-control" id="address" name="address" required></textarea>
-            <div class="invalid-feedback">Veuillez entrer une adresse.</div>
-        </div>
+                    <% if (typeof error !== 'undefined' && error) { %>
+                    <div class="alert alert-danger"><%= error %></div>
+                    <% } %>
 
-        <div class="mb-3">
-            <label for="postalCode" class="form-label">Code Postal (format canadien comme A1A 1A1) :</label>
-            <input type="text" class="form-control" id="postalCode" name="postalCode" pattern="^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z] ?\d[ABCEGHJ-NPRSTV-Z]\d$" title="Format invalide : doit être comme A1A 1A1 (lettres et chiffres alternés, espace optionnel)." required>
-            <div class="invalid-feedback">Code postal invalide (ex. A1A 1A1).</div>
-        </div>
+                    <form id="orderForm" action="/cmd/submit-order" method="POST" novalidate>
+                        <!-- Pizza type -->
+                        <fieldset class="mb-3">
+                            <legend>Sorte de Pizza commandée</legend>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="pizzaType" id="p_hawaienne" value="Hawaïenne" required <%= (typeof preselected !== 'undefined' && preselected === 'Hawaïenne') ? 'checked' : '' %>>
+                                <label class="form-check-label" for="p_hawaienne">Hawaïenne</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="pizzaType" id="p_alldressed" value="All-dressed" required <%= (typeof preselected !== 'undefined' && preselected === 'All-dressed') ? 'checked' : '' %>>
+                                <label class="form-check-label" for="p_alldressed">All-dressed</label>
+                            </div>
+                                <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="pizzaType" id="p_sicilienne" value="Sicilienne" required <%= (typeof preselected !== 'undefined' && preselected === 'Sicilienne') ? 'checked' : '' %>>
+                                <label class="form-check-label" for="p_sicilienne">Sicilienne</label>
+                            </div>
+                            <div class="invalid-feedback" id="pizzaTypeFeedback" style="display:none;">Veuillez choisir une pizza.</div>
+                        </fieldset>
 
-        <div class="mb-3">
-            <label for="name" class="form-label">Nom :</label>
-            <input type="text" class="form-control" id="name" name="name" required>
-            <div class="invalid-feedback">Veuillez entrer votre nom.</div>
-        </div>
+                        <!-- Quantity / Size row -->
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label for="quantity" class="form-label">Quantité</label>
+                                <input type="number" class="form-control" id="quantity" name="quantity" min="1" max="99" step="1" inputmode="numeric" pattern="\d+" value="1" required>
+                                <div class="invalid-feedback">La quantité doit être un entier entre 1 et 99. Ex : 2</div>
+                            </div>    
+                            <div class="col-md-4">
+                                <label for="size" class="form-label">Taille</label>
+                                <select class="form-select" id="size" name="size" required>
+                                    <option value="">Choisir...</option>
+                                    <option value="Small">Small</option>
+                                    <option value="Medium" selected>Medium</option>
+                                    <option value="Large">Large</option>
+                                </select>
+                                <div class="invalid-feedback">Veuillez choisir une taille.</div>
+                            </div>
+                        </div>
 
-        <div class="mb-3">
-            <label for="surname" class="form-label">Prénom :</label>
-            <input type="text" class="form-control" id="surname" name="surname" required>
-            <div class="invalid-feedback">Veuillez entrer votre prénom.</div>
-        </div>
+                        <!-- Extras -->
+                        <div class="mb-3">
+                            <label class="form-label">Ingrédients supplémentaires</label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="extras" id="extra_cheese" value="Fromage extra">
+                                <label class="form-check-label" for="extra_cheese">Fromage extra</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="extras" id="extra_pepperoni" value="Pepperoni">
+                                <label class="form-check-label" for="extra_pepperoni">Pepperoni</label>
+                            </div>
+                                <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="extras" id="extra_olives" value="Olives">
+                                <label class="form-check-label" for="extra_olives">Olives</label>
+                            </div>
+                        </div>
 
-        <div class="mb-3">
-            <label for="phone" class="form-label">Numéro de téléphone (seulement chiffres, -, (, )) :</label>
-            <input type="text" class="form-control" id="phone" name="phone" pattern="^[\d\-()]+$" title="Format invalide : seulement chiffres, tirets et parenthèses (ex. (123)-456-7890)." required>
-            <div class="invalid-feedback">Numéro de téléphone invalide.</div>
-        </div>
+                        <!-- Address / Contact -->
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Adresse</label>
+                            <textarea id="address" name="address" class="form-control" rows="2" required></textarea>
+                            <div class="invalid-feedback">Veuillez entrer une adresse.</div>
+                        </div>
 
-        <div class="mb-3">
-            <label for="email" class="form-label">Courriel :</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-            <div class="invalid-feedback">Veuillez entrer un courriel valide.</div>
-        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="postalCode" class="form-label">Code Postal</label>
+                                <input type="text" id="postalCode" name="postalCode" class="form-control" pattern="^[A-Za-z]\d[A-Za-z]\s?\d[A-Za-z]\d$" required>
+                                <div class="invalid-feedback">Code postal invalide. Format valide : A1A 1A1</div>
+                            </div>
 
-        <div class="mb-3">
-            <label for="payment" class="form-label">Mode de paiement :</label>
-            <select class="form-select" id="payment" name="payment" required>
-                <option value="">Choisir...</option>
-                <option value="Carte de crédit">Carte de crédit</option>
-                <option value="Espèces">Espèces</option>
-                <option value="Interac">Interac</option>
-            </select>
-            <div class="invalid-feedback">Veuillez choisir un mode de paiement.</div>
-        </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="phone" class="form-label">Téléphone</label>
+                                <input type="text" id="phone" name="phone" class="form-control" pattern="^[\d\-\(\)\s]+$" inputmode="tel" required>
+                                <div class="invalid-feedback">Numéro invalide. Format accepté : 514-123-4567 (chiffres, -, (), espaces)</div>
+                            </div>
 
-        <button type="submit" class="btn btn-primary">Confirmer la commande</button>
-    </form>
+                            <div class="col-md-4 mb-3">
+                                <label for="email" class="form-label">Courriel</label>
+                                <input type="email" id="email" name="email" class="form-control" required>
+                                <div class="invalid-feedback">Veuillez entrer un courriel valide (ex : nom@domaine.com).</div>
+                            </div>
+                        </div>
 
-    <!-- Script JS pour validation Bootstrap (optionnel, pour pop-ups plus jolis) -->
-    <script>
-        // Validation Bootstrap
-        (function () {
-            'use strict'
-            var forms = document.querySelectorAll('.needs-validation')
-            Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-        })()
-    </script>
-</body>
-</html>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Prénom</label>
+                                <input type="text" id="name" name="name" class="form-control" pattern="^[A-Za-zÀ-ÖØ-öø-ÿ'\-\s]+$" inputmode="text" required>
+                                <div class="invalid-feedback">Veuillez entrer votre prénom (lettres seulement). Ex : Éliott</div>
+                            </div>    
+                            <div class="col-md-6 mb-3">
+                                <label for="surname" class="form-label">Nom</label>
+                                <input type="text" id="surname" name="surname" class="form-control" pattern="^[A-Za-zÀ-ÖØ-öø-ÿ'\-\s]+$" inputmode="text" required>
+                                <div class="invalid-feedback">Veuillez entrer votre nom (lettres seulement). Ex : Desbordes</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="payment" class="form-label">Mode de paiement</label>
+                            <select id="payment" name="payment" class="form-select" required>
+                                <option value="">Choisir...</option>
+                                <option value="Carte de crédit">Carte de crédit</option>
+                                <option value="Espèces">Espèces</option>
+                                <option value="Interac">Interac</option>
+                            </select>
+                            <div class="invalid-feedback">Veuillez choisir un mode de paiement.</div>
+                        </div>
+
+                        <div class="d-flex justify-content-start gap-2">
+                            <button type="submit" class="btn btn-primary">Confirmer la commande</button>
+                            <a href="/" class="btn btn-link">Annuler</a>
+                        </div>
+                    </form>
+                </aside>
+            </section>
+        </main>
+
+        <footer class="mt-4"><%- include('../partials/footer') %></footer>
+
+        <!-- externalized validation script -->
+        <script src="/scripts/cmd-validation.js"></script>
+    </body>
+ </html>

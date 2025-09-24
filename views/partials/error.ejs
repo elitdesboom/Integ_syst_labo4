@@ -1,0 +1,23 @@
+<!--views/partial/error.ejs-->
+<!--
+/**
+  * @file     error.ejs
+  * @author   Éliott Desbordes-Boom (202257861@edu.clg.qc.ca)
+  * @version  1
+  * @date     23/09/2025
+  * @brief    Laboratoire 4 - Intégration de systèmes - Gestion des erreurs
+  */
+-->
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head><meta charset="utf-8"><title>Erreur</title></head>
+  <body class="container">
+    <h1>Erreur</h1>
+    <p><%= message %></p>
+    <% if (error && Object.keys(error).length) { %>
+      <pre><%= error.stack %></pre>
+    <% } %>
+    <a href="/">Retour</a>
+  </body>
+</html>

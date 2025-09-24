@@ -1,9 +1,9 @@
 /**
-  * @file     accueil.ejs
+  * @file     app.js
   * @author   Éliott Desbordes-Boom (202257861@edu.clg.qc.ca)
   * @version  1
-  * @date     12/09/2025
-  * @brief    Laboratoire 4 - Intégration de systèmes -  
+  * @date     23/09/2025
+  * @brief    Laboratoire 4 - Intégration de systèmes - Serveur Express de la pizzeria
   */
 
 
@@ -19,7 +19,10 @@ app.use(express.static('./public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(require('./routes/index'));
+
+app.use('/', require('./routes/accueil'));
+app.use('/accueil', require('./routes/accueil'));
+app.use('/cmd', require('./routes/cmd'));
 app.use('/contacts', require('./routes/contacts'));
 
 app.use(function (req, res, next) 
@@ -41,4 +44,4 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-module.exports = {app: app};
+module.exports = app;
