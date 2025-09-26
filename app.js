@@ -24,7 +24,7 @@ app.use('/', require('./routes/accueil'));
 app.use('/accueil', require('./routes/accueil'));
 app.use('/cmd', require('./routes/cmd'));
 app.use('/contacts', require('./routes/contacts'));
-
+app.use('/historique', require('./routes/historiques')); 
 app.use(function (req, res, next) 
 {
     res.status(404)

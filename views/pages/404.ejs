@@ -12,12 +12,32 @@
 
 <html lang="fr">
   <head>
-    <meta charset="utf-8">
-    <title>404 - Introuvable</title>
-  </head>
+
+    <%- include('../partials/head') %>
+
+</head>
   <body class="container">
-    <h1>404 — Page introuvable</h1>
-    <p>La page demandée n'existe pas.</p>
-    <a href="/">Accueil</a>
+    <header>
+
+        <%- include('../partials/header') %>
+
+    </header>
+    <main>
+
+        <div class="jumbotron">
+
+            <h1>404 — Page introuvable</h1>
+
+            <p>La page demandée n'existe pas.</p>
+
+        </div>
+
+    </main>
+    <footer>
+
+        <%- include('../partials/footer') %>
+
+    </footer>
   </body>
 </html>
+

@@ -1,0 +1,3 @@
+438-304-2393:{"pizzastyle":"A","quantite":"1","taille":"M","adresse":"46 92e avenue ouest","codepostal":"H2X 1Y4","fname":"elliot","lname":"elliot","telephone":"438-304-2393","email":"elliot.waterpolo@outlook.com","modepaiement":"Master"}
+undefined:{"phone":"438-304-2393"}
+438-304-2393:{"pizzastyle":"A","quantite":"1","taille":"M","adresse":"46 92e avenue ouest","codepostal":"H2X 1Y4","fname":"elliot","lname":"elliot","telephone":"438-304-2393","email":"elliot.waterpolo@outlook.com","modepaiement":"Master"}
