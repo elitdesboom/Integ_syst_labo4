@@ -9,143 +9,272 @@
   */
 -->
 
-
 <html lang="fr">
-    <head>
-        <%- include('../partials/head') %>
+  <head>
+    <%- include('../partials/head') %>
+  </head>
 
-    </head>
+  <body>
+    <header><%- include('../partials/header') %></header>
 
-    <body>
-        <header><%- include('../partials/header') %></header>
+    <main>
+      <section class="container">
+        <aside
+          class="form-wrapper"
+          style="
+            max-width: 900px;
+            margin: 2.5rem auto;
+            background: #b3d4e4;
+            padding: 1.5rem;
+          "
+        >
+          <h1 class="mb-3"><%= title || 'Formulaire de Commande' %></h1>
 
-        <main>
-            <section class="container">
-                <aside class="form-wrapper" style="max-width: 900px; margin: 2.5rem auto; background: #b3d4e4; ;padding: 1.5rem;">
-                    <h1 class="mb-3"><%= title || 'Formulaire de Commande' %></h1>
+          <% if (typeof error !== 'undefined' && error) { %>
+          <div class="alert alert-danger"><%= error %></div>
+          <% } %>
 
-                    <% if (typeof error !== 'undefined' && error) { %>
-                    <div class="alert alert-danger"><%= error %></div>
-                    <% } %>
+          <form
+            id="orderForm"
+            action="/cmd/submit-order"
+            method="POST"
+            novalidate
+          >
+            <!-- Pizza type -->
+            <fieldset class="mb-3">
+              <legend>Sorte de Pizza commandée</legend>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="pizzaType"
+                id="p_hawaienne" value="Hawaïenne" required <%= (typeof
+                preselected !== 'undefined' && preselected === 'Hawaïenne') ?
+                'checked' : '' %>>
+                <label class="form-check-label" for="p_hawaienne"
+                  >Hawaïenne</label
+                >
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="pizzaType"
+                id="p_alldressed" value="All-dressed" required <%= (typeof
+                preselected !== 'undefined' && preselected === 'All-dressed') ?
+                'checked' : '' %>>
+                <label class="form-check-label" for="p_alldressed"
+                  >All-dressed</label
+                >
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="pizzaType"
+                id="p_sicilienne" value="Sicilienne" required <%= (typeof
+                preselected !== 'undefined' && preselected === 'Sicilienne') ?
+                'checked' : '' %>>
+                <label class="form-check-label" for="p_sicilienne"
+                  >Sicilienne</label
+                >
+              </div>
+              <div
+                class="invalid-feedback"
+                id="pizzaTypeFeedback"
+                style="display: none"
+              >
+                Veuillez choisir une pizza.
+              </div>
+            </fieldset>
 
-                    <form id="orderForm" action="/cmd/submit-order" method="POST" novalidate>
-                        <!-- Pizza type -->
-                        <fieldset class="mb-3">
-                            <legend>Sorte de Pizza commandée</legend>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="pizzaType" id="p_hawaienne" value="Hawaïenne" required <%= (typeof preselected !== 'undefined' && preselected === 'Hawaïenne') ? 'checked' : '' %>>
-                                <label class="form-check-label" for="p_hawaienne">Hawaïenne</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="pizzaType" id="p_alldressed" value="All-dressed" required <%= (typeof preselected !== 'undefined' && preselected === 'All-dressed') ? 'checked' : '' %>>
-                                <label class="form-check-label" for="p_alldressed">All-dressed</label>
-                            </div>
-                                <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="pizzaType" id="p_sicilienne" value="Sicilienne" required <%= (typeof preselected !== 'undefined' && preselected === 'Sicilienne') ? 'checked' : '' %>>
-                                <label class="form-check-label" for="p_sicilienne">Sicilienne</label>
-                            </div>
-                            <div class="invalid-feedback" id="pizzaTypeFeedback" style="display:none;">Veuillez choisir une pizza.</div>
-                        </fieldset>
+            <!-- Quantity / Size row -->
+            <div class="row mb-3">
+              <div class="col-md-3">
+                <label for="quantity" class="form-label">Quantité</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="quantity"
+                  name="quantity"
+                  min="1"
+                  max="99"
+                  step="1"
+                  inputmode="numeric"
+                  pattern="\d+"
+                  value="1"
+                  required
+                />
+                <div class="invalid-feedback">
+                  La quantité doit être un entier entre 1 et 99. Ex : 2
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="size" class="form-label">Taille</label>
+                <select class="form-select" id="size" name="size" required>
+                  <option value="">Choisir...</option>
+                  <option value="Small">Small</option>
+                  <option value="Medium" selected>Medium</option>
+                  <option value="Large">Large</option>
+                </select>
+                <div class="invalid-feedback">Veuillez choisir une taille.</div>
+              </div>
+            </div>
 
-                        <!-- Quantity / Size row -->
-                        <div class="row mb-3">
-                            <div class="col-md-3">
-                                <label for="quantity" class="form-label">Quantité</label>
-                                <input type="number" class="form-control" id="quantity" name="quantity" min="1" max="99" step="1" inputmode="numeric" pattern="\d+" value="1" required>
-                                <div class="invalid-feedback">La quantité doit être un entier entre 1 et 99. Ex : 2</div>
-                            </div>    
-                            <div class="col-md-4">
-                                <label for="size" class="form-label">Taille</label>
-                                <select class="form-select" id="size" name="size" required>
-                                    <option value="">Choisir...</option>
-                                    <option value="Small">Small</option>
-                                    <option value="Medium" selected>Medium</option>
-                                    <option value="Large">Large</option>
-                                </select>
-                                <div class="invalid-feedback">Veuillez choisir une taille.</div>
-                            </div>
-                        </div>
+            <!-- Extras -->
+            <div class="mb-3">
+              <label class="form-label">Ingrédients supplémentaires</label
+              ><br />
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="extras"
+                  id="extra_cheese"
+                  value="Fromage extra"
+                />
+                <label class="form-check-label" for="extra_cheese"
+                  >Fromage extra</label
+                >
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="extras"
+                  id="extra_pepperoni"
+                  value="Pepperoni"
+                />
+                <label class="form-check-label" for="extra_pepperoni"
+                  >Pepperoni</label
+                >
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="extras"
+                  id="extra_olives"
+                  value="Olives"
+                />
+                <label class="form-check-label" for="extra_olives"
+                  >Olives</label
+                >
+              </div>
+            </div>
 
-                        <!-- Extras -->
-                        <div class="mb-3">
-                            <label class="form-label">Ingrédients supplémentaires</label><br>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" name="extras" id="extra_cheese" value="Fromage extra">
-                                <label class="form-check-label" for="extra_cheese">Fromage extra</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" name="extras" id="extra_pepperoni" value="Pepperoni">
-                                <label class="form-check-label" for="extra_pepperoni">Pepperoni</label>
-                            </div>
-                                <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" name="extras" id="extra_olives" value="Olives">
-                                <label class="form-check-label" for="extra_olives">Olives</label>
-                            </div>
-                        </div>
+            <!-- Address / Contact -->
+            <div class="mb-3">
+              <label for="address" class="form-label">Adresse</label>
+              <textarea
+                id="address"
+                name="address"
+                class="form-control"
+                rows="2"
+                required
+              ></textarea>
+              <div class="invalid-feedback">Veuillez entrer une adresse.</div>
+            </div>
 
-                        <!-- Address / Contact -->
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Adresse</label>
-                            <textarea id="address" name="address" class="form-control" rows="2" required></textarea>
-                            <div class="invalid-feedback">Veuillez entrer une adresse.</div>
-                        </div>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label for="postalCode" class="form-label">Code Postal</label>
+                <input
+                  type="text"
+                  id="postalCode"
+                  name="postalCode"
+                  class="form-control"
+                  pattern="^[A-Za-z]\d[A-Za-z]\s?\d[A-Za-z]\d$"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Code postal invalide. Format valide : A1A 1A1
+                </div>
+              </div>
 
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label for="postalCode" class="form-label">Code Postal</label>
-                                <input type="text" id="postalCode" name="postalCode" class="form-control" pattern="^[A-Za-z]\d[A-Za-z]\s?\d[A-Za-z]\d$" required>
-                                <div class="invalid-feedback">Code postal invalide. Format valide : A1A 1A1</div>
-                            </div>
+              <div class="col-md-4 mb-3">
+                <label for="phone" class="form-label">Téléphone</label>
+                <input
+                  type="text"
+                  id="phone"
+                  name="phone"
+                  class="form-control"
+                  pattern="^[\d\-\(\)\s]+$"
+                  inputmode="tel"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Numéro invalide. Format accepté : 514-123-4567 (chiffres, -,
+                  (), espaces)
+                </div>
+              </div>
 
-                            <div class="col-md-4 mb-3">
-                                <label for="phone" class="form-label">Téléphone</label>
-                                <input type="text" id="phone" name="phone" class="form-control" pattern="^[\d\-\(\)\s]+$" inputmode="tel" required>
-                                <div class="invalid-feedback">Numéro invalide. Format accepté : 514-123-4567 (chiffres, -, (), espaces)</div>
-                            </div>
+              <div class="col-md-4 mb-3">
+                <label for="email" class="form-label">Courriel</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="form-control"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Veuillez entrer un courriel valide (ex : nom@domaine.com).
+                </div>
+              </div>
+            </div>
 
-                            <div class="col-md-4 mb-3">
-                                <label for="email" class="form-label">Courriel</label>
-                                <input type="email" id="email" name="email" class="form-control" required>
-                                <div class="invalid-feedback">Veuillez entrer un courriel valide (ex : nom@domaine.com).</div>
-                            </div>
-                        </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="name" class="form-label">Prénom</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="form-control"
+                  pattern="^[A-Za-zÀ-ÖØ-öø-ÿ'\-\s]+$"
+                  inputmode="text"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Veuillez entrer votre prénom (lettres seulement). Ex : Éliott
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="surname" class="form-label">Nom</label>
+                <input
+                  type="text"
+                  id="surname"
+                  name="surname"
+                  class="form-control"
+                  pattern="^[A-Za-zÀ-ÖØ-öø-ÿ'\-\s]+$"
+                  inputmode="text"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Veuillez entrer votre nom (lettres seulement). Ex : Desbordes
+                </div>
+              </div>
+            </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="name" class="form-label">Prénom</label>
-                                <input type="text" id="name" name="name" class="form-control" pattern="^[A-Za-zÀ-ÖØ-öø-ÿ'\-\s]+$" inputmode="text" required>
-                                <div class="invalid-feedback">Veuillez entrer votre prénom (lettres seulement). Ex : Éliott</div>
-                            </div>    
-                            <div class="col-md-6 mb-3">
-                                <label for="surname" class="form-label">Nom</label>
-                                <input type="text" id="surname" name="surname" class="form-control" pattern="^[A-Za-zÀ-ÖØ-öø-ÿ'\-\s]+$" inputmode="text" required>
-                                <div class="invalid-feedback">Veuillez entrer votre nom (lettres seulement). Ex : Desbordes</div>
-                            </div>
-                        </div>
+            <div class="mb-3">
+              <label for="payment" class="form-label">Mode de paiement</label>
+              <select id="payment" name="payment" class="form-select" required>
+                <option value="">Choisir...</option>
+                <option value="Carte de crédit">Carte de crédit</option>
+                <option value="Espèces">Espèces</option>
+                <option value="Interac">Interac</option>
+              </select>
+              <div class="invalid-feedback">
+                Veuillez choisir un mode de paiement.
+              </div>
+            </div>
 
-                        <div class="mb-3">
-                            <label for="payment" class="form-label">Mode de paiement</label>
-                            <select id="payment" name="payment" class="form-select" required>
-                                <option value="">Choisir...</option>
-                                <option value="Carte de crédit">Carte de crédit</option>
-                                <option value="Espèces">Espèces</option>
-                                <option value="Interac">Interac</option>
-                            </select>
-                            <div class="invalid-feedback">Veuillez choisir un mode de paiement.</div>
-                        </div>
+            <div class="d-flex justify-content-start gap-2">
+              <button type="submit" class="btn btn-primary">
+                Confirmer la commande
+              </button>
+              <a href="/" class="btn btn-link">Annuler</a>
+            </div>
+          </form>
+        </aside>
+      </section>
+    </main>
 
-                        <div class="d-flex justify-content-start gap-2">
-                            <button type="submit" class="btn btn-primary">Confirmer la commande</button>
-                            <a href="/" class="btn btn-link">Annuler</a>
-                        </div>
-                    </form>
-                </aside>
-            </section>
-        </main>
+    <footer class="mt-4"><%- include('../partials/footer') %></footer>
 
-        <footer class="mt-4"><%- include('../partials/footer') %></footer>
-
-        <!-- externalized validation script -->
-        <script src="/scripts/cmd-validation.js"></script>
-    </body>
- </html>
+    <!-- externalized validation script -->
+    <script src="/scripts/cmd-validation.js"></script>
+  </body>
+</html>

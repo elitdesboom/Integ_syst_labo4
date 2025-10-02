@@ -9,6 +9,28 @@
 const express = require('express');
 const router = express.Router();
 
+// Constantes de prix
+const PIZZA_PRICES = {
+    'Hawaïenne': 7.00,
+    'All-dressed': 8.10,
+    'Sicilienne': 6.30
+};
+const EXTRA_PRICE = 0.50;
+const SIZE_MULTIPLIERS = {
+    'Small': 0.8,
+    'Medium': 1.0,
+    'Large': 1.2
+};
+
+// Fonction utilitaire pour rendre une page d'erreur
+function renderErrorPage(res, pizzaType, errorMessage) {
+    return res.render('pages/cmd', { 
+        title: 'Erreur', 
+        error: errorMessage, 
+        preselected: pizzaType 
+    });
+}
+
 // GET /cmd  -> afficher le formulaire (prend pizza via query string pour préremplir)
 router.get('/', function (req, res, next) {
     const preselected = req.query.pizza || '';
@@ -27,15 +49,15 @@ router.post('/submit-order', function (req, res, next) {
     // validations basiques
     const qty = parseInt(quantity, 10);
     if (isNaN(qty) || qty < 1 || qty > 99) {
-        return res.render('pages/cmd', { title: 'Erreur', error: 'Quantité invalide (1-99).', preselected: pizzaType });
+                return renderErrorPage(res, pizzaType, 'Quantité invalide (1-99).');
     }
     const postalRegex = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z] ?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
     if (!postalRegex.test(postalCode)) {
-        return res.render('pages/cmd', { title: 'Erreur', error: 'Code postal invalide.', preselected: pizzaType });
+        return renderErrorPage(res, pizzaType, 'Code postal invalide.');
     }
     const phoneRegex = /^[\d\-()\s]+$/;
     if (!phoneRegex.test(phone)) {
-        return res.render('pages/cmd', { title: 'Erreur', error: 'Numéro de téléphone invalide.', preselected: pizzaType });
+         return renderErrorPage(res, pizzaType, 'Numéro de téléphone invalide.');
     }
 
     // calcul prix — utiliser extrasArr.length
@@ -68,19 +90,9 @@ router.post('/submit-order', function (req, res, next) {
 
 function calculerPrixUnitaire(type, nbExtras, taille)
 {
-    const prixBase = 
-    {
-        'Hawaïenne': 7.00,
-        'All-dressed': 8.10,
-        'Sicilienne': 6.30
-    }[type] || 0;
-    const prixExtras = nbExtras * 0.50;
-    const multiplicateurTaille = 
-    {
-        'Small': 0.8,
-        'Medium': 1,
-        'Large': 1.2
-    }[taille] || 1;
+    const prixBase = PIZZA_PRICES[type] || 0;
+    const prixExtras = nbExtras * EXTRA_PRICE;
+    const multiplicateurTaille = SIZE_MULTIPLIERS[taille] || 1;
     return (prixBase + prixExtras) * multiplicateurTaille;
 }
 

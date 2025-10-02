@@ -7,60 +7,78 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
+  
+  function addInputValidation(elementId, regexKeypress, regexPaste) {
+    const input = document.getElementById(elementId);
+    if(input) {
+      input.addEventListener('keypress', function(e) {
+        if(!regexKeypress.test(e.key)) {
+          e.preventDefault();
+        }
+      });
+      input.addEventListener('paste', function(e) {
+        const paste = (e.clipboardData || window.clipboardData).getData('text');
+        if(!regexPaste.test(paste)) {
+          e.preventDefault();
+        }
+      });
+    }
+ }
+
+   // Fonction pour obtenir les messages d'erreur
+  function getErrorMessage(fieldName) {
+    const messages = {
+      'pizzaType': 'Veuillez choisir une pizza.',
+      'quantity': 'Quantité : entier entre 1 et 99. Ex : 2',
+      'size': 'Taille : choisissez Small, Medium ou Large.',
+      'address': 'Adresse : champ requis.',
+      'postalCode': 'Code postal : format valide A1A 1A1 (ex : H2X 1Y4).',
+      'phone': 'Téléphone : format valide ex. 514-123-4567 (chiffres, -, (), espaces).',
+      'email': 'Courriel : format valide ex. nom@domaine.com.',
+      'name': 'Prénom : lettres seulement (ex : Éliott).',
+      'surname': 'Nom : lettres seulement (ex : Desbordes).',
+      'payment': 'Paiement : choisissez un mode de paiement.'
+    };
+    return messages[fieldName] || 'Champ invalide.';
+  }
+
+  // Fonction pour afficher les erreurs
+  function displayError(element, message) {
+    const field = element.name || element.id || '';
+    let feedback = null;
+
+    if(field === 'pizzaType') {
+      feedback = document.getElementById('pizzaTypeFeedback');
+    }
+    else {
+      feedback = element.closest('.mb-3')?.querySelector('.invalid-feedback') || element.parentElement?.querySelector('.invalid-feedback');
+
+    }
+
+    if(feedback) {
+      feedback.textContent= message;
+      feedback.style.display = 'block';
+    }
+
+    if(element.classList) {
+      element.classList.add('is-invalid');
+    }
+  }
+
   //Quantité : bloquer lettres, copier coller non numériques et roulette souris
+  addInputValidation('quantity', /\d/, /^\d+$/);
   const qty = document.getElementById('quantity');
-  if (qty)
-  {
+  if (qty) {
     qty.setAttribute('inputmode','numeric');
-    qty.addEventListener('keypress', e => { if (!/\d/.test(e.key)) e.preventDefault(); });
-    qty.addEventListener('paste', e => 
-    {
-      const paste = (e.clipboardData || window.clipboardData).getData('text');
-      if (!/^\d+$/.test(paste)) e.preventDefault();
-    });
-    qty.addEventListener('wheel', e => e.preventDefault(), { passive: false });
+    qty.addEventListener('wheel', function(e) {e.preventDefault();}, { passive: false });
   }
 
   // empêcher chiffres dans les champs prénom/nom
-  const nameInput = document.getElementById('name');
-  const surnameInput = document.getElementById('surname');
-  function blockDigits(e) 
-  {
-    // autorise lettres accentuées, espaces, -, '
-    if (!/^[\p{L}\s'\-]$/u.test(e.key)) e.preventDefault();
-  }
+  addInputValidation('name', /^[\p{L}\s'\-]$/u, /^[A-Za-zÀ-ÖØ-öø-ÿ'\-\s]+$/);
+  addInputValidation('surname', /^[\p{L}\s'\-]$/u, /^[A-Za-zÀ-ÖØ-öø-ÿ'\-\s]+$/);
 
-  //Entrée dans le case prénom
-  if (nameInput) 
-  {
-    nameInput.addEventListener('keypress', blockDigits); //bloque écriture chiffre
-    nameInput.addEventListener('paste', e =>
-    {
-      const paste = (e.clipboardData || window.clipboardData).getData('text');
-      if (!/^[A-Za-zÀ-ÖØ-öø-ÿ'\-\s]+$/.test(paste)) e.preventDefault(); //Regarde les caractères illégaux avant de copier coller
-    });
-  }
-
-  
-  if (surnameInput) //Si entrée d'un prénom dans le case nom
-  {
-    surnameInput.addEventListener('keypress', blockDigits); //Bloque les chiffres
-    surnameInput.addEventListener('paste', e => {
-      const paste = (e.clipboardData || window.clipboardData).getData('text');
-      if (!/^[A-Za-zÀ-ÖØ-öø-ÿ'\-\s]+$/.test(paste)) e.preventDefault();
-    });
-  }
-
-  // empêcher lettres dans téléphone (laisser chiffres, -, (), espace)
-  const phone = document.getElementById('phone');
-  if (phone) 
-  {
-    phone.addEventListener('keypress', e => { if (!/[\d\-\(\)\s]/.test(e.key)) e.preventDefault(); });
-    phone.addEventListener('paste', e => {
-      const paste = (e.clipboardData || window.clipboardData).getData('text');
-      if (!/^[\d\-\(\)\s]+$/.test(paste)) e.preventDefault();
-    });
-  }
+// empêcher lettres dans téléphone (laisser chiffres, -, (), espace)
+  addInputValidation('phone', /[\d\-\(\)\s]/, /^[\d\-\(\)\s]+$/);
 
   const form = document.getElementById('orderForm');
   if (!form) return;
@@ -121,63 +139,8 @@ document.addEventListener('DOMContentLoaded', function () {
       // pour chaque champ invalide : définir le message sous le champ + marquer en rouge
       invalidEls.forEach(el => {
         const field = el.name || el.id || '';
-        let msg = '';
-        switch (field) 
-        {
-          case 'pizzaType':
-            msg = 'Veuillez choisir une pizza.';
-            const fb = document.getElementById('pizzaTypeFeedback');
-            if (fb) { fb.textContent = msg; fb.style.display = 'block'; }
-            break;
-          case 'quantity':
-            msg = 'Quantité : entier entre 1 et 99. Ex : 2';
-            break;
-          case 'size':
-            msg = 'Taille : choisissez Small, Medium ou Large.';
-            break;
-          case 'address':
-            msg = 'Adresse : champ requis.';
-            break;
-          case 'postalCode':
-            msg = 'Code postal : format valide A1A 1A1 (ex : H2X 1Y4).';
-            break;
-          case 'phone':
-            msg = 'Téléphone : format valide ex. 514-123-4567 (chiffres, -, (), espaces).';
-            break;
-          case 'email':
-            msg = 'Courriel : format valide ex. nom@domaine.com.';
-            break;
-          case 'name':
-            msg = 'Prénom : lettres seulement (ex : Éliott).';
-            break;
-          case 'surname':
-            msg = 'Nom : lettres seulement (ex : Desbordes).';
-            break;
-          case 'payment':
-            msg = 'Paiement : choisissez un mode de paiement.';
-            break;
-          default:
-            msg = 'Champ invalide.';
-        }
-
-        //Afficher le feedback sous le champ (si présent)
-        let feedback = null;
-        if (field === 'pizzaType') 
-        {
-          feedback = document.getElementById('pizzaTypeFeedback');
-        } 
-        else 
-        {
-          feedback = el.closest('.mb-3')?.querySelector('.invalid-feedback') || el.parentElement?.querySelector('.invalid-feedback');
-        }
-
-        if (feedback) 
-        {
-          feedback.textContent = msg;
-          feedback.style.display = 'block';
-        }
-
-        if (el.classList) el.classList.add('is-invalid');
+        const message = getErrorMessage(field);
+        displayError(el, message);
       });
 
       showSimpleAlert('Certains champs sont non conformes. Corrigez les champs en surbrillance.');
